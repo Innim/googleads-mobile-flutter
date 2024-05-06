@@ -1,3 +1,15 @@
+## Next Version
+* Adds support for APIs from the [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 2.2.0.
+* Adds support for APIs from the [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 2.4.0.
+
+## 5.0.0
+* Adds `MediationExtras` class to include parameters when using mediation through the implementation of `FlutterMediationExtras` in Android and `FlutterMediationExtras` in iOS.
+* Deprecates `MediationNetworkExtrasProvider` and `FLTMediationNetworkExtrasProvider`.
+* Removed the `orientation` parameter for the AppOpen Ad format.
+* Bumps minimum Android SDK version to 21.
+* Updates GMA iOS dependency to 11.2.0
+* Updates GMA Android dependency to 23.0.0
+
 ## 4.0.0
 * The minimum supported Flutter version is now 3.7.0.
 * Removes `visibility_detector` as a dependency, and the workaround added in
