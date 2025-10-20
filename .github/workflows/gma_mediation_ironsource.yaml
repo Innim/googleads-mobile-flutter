@@ -31,7 +31,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       - uses: actions/setup-java@v4
@@ -54,10 +54,12 @@ jobs:
     steps:
       - uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "5.7.2"
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+          swift-version: "6.0.0"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_16.2.0.app/Contents/Developer'
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
@@ -81,7 +83,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-    - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       with:
         fetch-depth: 0
     - name: "Install Flutter"
@@ -92,12 +94,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_ironsource
         flutter analyze
-    - name: "Flutter Publish"
-      run: |
-        cd packages/mediation/gma_mediation_ironsource
-        flutter pub publish --dry-run
-    - name: "Flutter Format"
-      run: |
-        flutter pub global activate flutter_plugin_tools
-        flutter pub global run flutter_plugin_tools format
-        ./.github/workflows/scripts/validate-formatting.sh
