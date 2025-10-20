@@ -4,16 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'app_bar_item.dart';
 import 'consent_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(
-    home: InterstitialExample(),
-  ));
+  runApp(const MaterialApp(home: InterstitialExample()));
 }
 
-/// A simple app that loads an interstitial ad.
+/// An example app that loads an interstitial ad.
 class InterstitialExample extends StatefulWidget {
   const InterstitialExample({super.key});
 
@@ -22,14 +21,13 @@ class InterstitialExample extends StatefulWidget {
 }
 
 class InterstitialExampleState extends State<InterstitialExample> {
-  static const privacySettingsText = 'Privacy Settings';
-
   InterstitialAd? _interstitialAd;
   final _consentManager = ConsentManager();
   final _gameLength = 5;
   var _gamePaused = false;
   var _gameOver = false;
   var _isMobileAdsInitializeCalled = false;
+  var _isPrivacyOptionsRequired = false;
   late var _counter = _gameLength;
   Timer? _timer;
 
@@ -45,11 +43,15 @@ class InterstitialExampleState extends State<InterstitialExample> {
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+          "${consentGatheringError.errorCode}: ${consentGatheringError.message}",
+        );
       }
 
       // Kick off the first play of the "game".
       _startNewGame();
+
+      // Check if a privacy options entry point is required.
+      _getIsPrivacyOptionsRequired();
 
       // Attempt to initialize the Mobile Ads SDK.
       _initializeMobileAdsSDK();
@@ -88,77 +90,82 @@ class InterstitialExampleState extends State<InterstitialExample> {
     return MaterialApp(
       title: 'Interstitial Example',
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Interstitial Example'),
-            actions: _isMobileAdsInitializeCalled
-                ? _privacySettingsAppBarAction()
-                : null,
-          ),
-          body: Stack(
-            children: [
-              const Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Text(
-                      'The Impossible Game',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: const Text('Interstitial Example'),
+          actions: _appBarActions(),
+        ),
+        body: Stack(
+          children: [
+            const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Text(
+                  'The Impossible Game',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('${_counter.toString()} seconds left!'),
+                  Visibility(
+                    visible: _counter == 0,
+                    child: TextButton(
+                      onPressed: () {
+                        _startNewGame();
+                        _loadAd();
+                      },
+                      child: const Text('Play Again'),
                     ),
-                  )),
-              Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('${_counter.toString()} seconds left!'),
-                      Visibility(
-                        visible: _counter == 0,
-                        child: TextButton(
-                          onPressed: () {
-                            _startNewGame();
-                            _loadAd();
-                          },
-                          child: const Text('Play Again'),
-                        ),
-                      )
-                    ],
-                  )),
-            ],
-          )),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  List<Widget> _privacySettingsAppBarAction() {
+  List<Widget> _appBarActions() {
+    var array = [AppBarItem(AppBarItem.adInpsectorText, 0)];
+
+    if (_isPrivacyOptionsRequired) {
+      array.add(AppBarItem(AppBarItem.privacySettingsText, 1));
+    }
+
     return <Widget>[
-      // Regenerate the options menu to include a privacy setting.
-      FutureBuilder(
-          future: _consentManager.isPrivacyOptionsRequired(),
-          builder: (context, snapshot) {
-            final bool visibility = snapshot.data ?? false;
-            return Visibility(
-                visible: visibility,
-                child: PopupMenuButton<String>(
-                  onSelected: (String result) {
-                    if (result == privacySettingsText) {
-                      _pauseGame();
-                      _consentManager.showPrivacyOptionsForm((formError) {
-                        if (formError != null) {
-                          debugPrint(
-                              "${formError.errorCode}: ${formError.message}");
-                        }
-                        _resumeGame();
-                      });
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                        value: privacySettingsText,
-                        child: Text(privacySettingsText))
-                  ],
-                ));
-          })
+      PopupMenuButton<AppBarItem>(
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
+        onSelected: (item) {
+          _pauseGame();
+          switch (item.value) {
+            case 0:
+              MobileAds.instance.openAdInspector((error) {
+                // Error will be non-null if ad inspector closed due to an error.
+                _resumeGame();
+              });
+            case 1:
+              _consentManager.showPrivacyOptionsForm((formError) {
+                if (formError != null) {
+                  debugPrint("${formError.errorCode}: ${formError.message}");
+                }
+                _resumeGame();
+              });
+          }
+        },
+      ),
     ];
   }
 
@@ -172,54 +179,70 @@ class InterstitialExampleState extends State<InterstitialExample> {
     }
 
     InterstitialAd.load(
-        adUnitId: _adUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
+      adUnitId: _adUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
           // Called when an ad is successfully received.
-          onAdLoaded: (InterstitialAd ad) {
-            ad.fullScreenContentCallback = FullScreenContentCallback(
-                // Called when the ad showed the full screen content.
-                onAdShowedFullScreenContent: (ad) {},
-                // Called when an impression occurs on the ad.
-                onAdImpression: (ad) {},
-                // Called when the ad failed to show full screen content.
-                onAdFailedToShowFullScreenContent: (ad, err) {
-                  ad.dispose();
-                },
-                // Called when the ad dismissed full screen content.
-                onAdDismissedFullScreenContent: (ad) {
-                  ad.dispose();
-                },
-                // Called when a click is recorded for an ad.
-                onAdClicked: (ad) {});
-
-            // Keep a reference to the ad so you can show it later.
-            _interstitialAd = ad;
-          },
+          debugPrint('Ad was loaded.');
+          // Keep a reference to the ad so you can show it later.
+          _interstitialAd = ad;
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (ad) {
+              // Called when the ad showed the full screen content.
+              debugPrint('Ad showed full screen content.');
+            },
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              // Called when the ad failed to show full screen content.
+              debugPrint(
+                'Ad failed to show full screen content with error: $err',
+              );
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            onAdDismissedFullScreenContent: (ad) {
+              // Called when the ad dismissed full screen content.
+              debugPrint('Ad was dismissed.');
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            onAdImpression: (ad) {
+              // Called when an impression occurs on the ad.
+              debugPrint('Ad recorded an impression.');
+            },
+            onAdClicked: (ad) {
+              // Called when a click is recorded for an ad.
+              debugPrint('Ad was clicked.');
+            },
+          );
+        },
+        onAdFailedToLoad: (LoadAdError error) {
           // Called when an ad request failed.
-          onAdFailedToLoad: (LoadAdError error) {
-            // ignore: avoid_print
-            print('InterstitialAd failed to load: $error');
-          },
-        ));
+          debugPrint('Ad failed to load with error: $error');
+        },
+      ),
+    );
   }
 
   void _showAlert(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Game Over'),
-              content: Text('You lasted $_gameLength seconds'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _interstitialAd?.show();
-                  },
-                  child: const Text('OK'),
-                )
-              ],
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Game Over'),
+        content: Text('You lasted $_gameLength seconds'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // [START show_ad]
+              _interstitialAd?.show();
+              // [END show_ad]
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _startTimer() {
@@ -234,6 +257,15 @@ class InterstitialExampleState extends State<InterstitialExample> {
     });
   }
 
+  /// Redraw the app bar actions if a privacy options entry point is required.
+  void _getIsPrivacyOptionsRequired() async {
+    if (await _consentManager.isPrivacyOptionsRequired()) {
+      setState(() {
+        _isPrivacyOptionsRequired = true;
+      });
+    }
+  }
+
   /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
   /// the app's configured messages.
   void _initializeMobileAdsSDK() async {
@@ -241,14 +273,12 @@ class InterstitialExampleState extends State<InterstitialExample> {
       return;
     }
 
-    var canRequestAds = await _consentManager.canRequestAds();
-    if (canRequestAds) {
-      setState(() {
-        _isMobileAdsInitializeCalled = true;
-      });
+    if (await _consentManager.canRequestAds()) {
+      _isMobileAdsInitializeCalled = true;
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
+
       // Load an ad.
       _loadAd();
     }
