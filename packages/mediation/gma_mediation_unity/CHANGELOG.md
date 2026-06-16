@@ -1,5 +1,38 @@
 ## Unity Ads Flutter Mediation Adapter Changelog
 
+#### Version 1.8.0
+- Supports [Unity Android adapter version 4.18.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41800).
+- Supports [Unity iOS adapter version 4.18.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41800).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
+
+#### Version 1.7.0
+- Updated minimum Flutter version to 3.38.1.
+- Updated to support Google Mobile Ads Flutter Plugin version 8.0.0.
+- Supports [Unity Android adapter version 4.17.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41700).
+- Supports [Unity iOS adapter version 4.17.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41700).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
+
+#### Version 1.6.5
+- Supports [Unity Android adapter version 4.16.6.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41660).
+- Supports [Unity iOS adapter version 4.16.6.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41660).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 1.6.4
+- Updated minimum Flutter version to 3.35.1
+- Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
+- Supports [Unity Android adapter version 4.16.5.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41650).
+- Supports [Unity iOS adapter version 4.16.5.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41650).
+
+#### Version 1.6.3
+- Supports [Unity Android adapter version 4.16.3.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41630).
+- Supports [Unity iOS adapter version 4.16.3.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41630).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 1.6.2
+- Supports [Unity Android adapter version 4.16.3.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41630).
+- Supports [Unity iOS adapter version 4.16.2.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41620).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
 #### Version 1.6.1
 - Supports [Unity Android adapter version 4.16.1.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41610).
 - Supports [Unity iOS adapter version 4.16.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Unity/CHANGELOG.md#version-41610).

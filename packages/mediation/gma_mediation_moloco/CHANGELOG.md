@@ -1,6 +1,46 @@
 ## Moloco Flutter Mediation Adapter Changelog
 
-#### Version 2.0.0 (In progress)
+#### Version 3.5.1 (In progress)
+
+#### Version 3.5.0 (In progress)
+
+#### Version 3.4.0
+- Updated minimum Flutter version to 3.38.1
+- Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
+- Supports [Moloco Android adapter version 4.7.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4700).
+- Supports [Moloco iOS adapter version 4.5.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-4510).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
+
+#### Version 3.3.0
+- Supports [Moloco Android adapter version 4.5.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4500).
+- Supports [Moloco iOS adapter version 4.3.0.2](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-4302).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 7.0.0.
+
+#### Version 3.2.0
+- Supports [Moloco Android adapter version 4.4.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4400).
+- Supports [Moloco iOS adapter version 4.2.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-4200).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 7.0.0.
+
+#### Version 3.1.0
+- Updated minimum Flutter version to 3.35.1
+- Supports [Moloco Android adapter version 4.4.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4400).
+- Supports [Moloco iOS adapter version 4.1.2.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-4120).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 7.0.0.
+
+#### Version 3.0.0
+- Supports [Moloco Android adapter version 4.3.1.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4310).
+- Supports [Moloco iOS adapter version 4.1.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-4100).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 2.1.0
+- Supports [Moloco Android adapter version 4.2.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4200).
+- Supports [Moloco iOS adapter version 3.13.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-31300).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 2.0.0
+- Supports [Moloco Android adapter version 4.0.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-4000).
+- Supports [Moloco iOS adapter version 3.13.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-31300).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 1.6.0
 - Supports [Moloco Android adapter version 3.12.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-31200).
