@@ -1,5 +1,38 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
+#### Version 2.4.1
+- Supports [ironSource Android adapter version 9.4.2.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9420).
+- Supports [ironSource iOS adapter version 9.4.1.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-94100).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
+
+#### Version 2.4.0
+- Updated minimum Flutter version to 3.38.1
+- Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
+- Supports [ironSource Android adapter version 9.4.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9400).
+- Supports [ironSource iOS adapter version 9.4.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-94000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
+
+#### Version 2.3.0
+- Supports [ironSource Android adapter version 9.3.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9300).
+- Supports [ironSource iOS adapter version 9.2.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-92000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 2.2.0
+- Supports [ironSource Android adapter version 9.1.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9100).
+- Supports [ironSource iOS adapter version 9.2.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-91000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 2.1.0
+- Supports [ironSource Android adapter version 9.1.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9100).
+- Supports [ironSource iOS adapter version 9.1.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-91000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 2.0.1
+- Fixed iOS build with new API
+- Supports [ironSource Android adapter version 9.0.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9000).
+- Supports [ironSource iOS adapter version 9.0.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-90000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
 #### Version 2.0.0
 - Supports [ironSource Android adapter version 9.0.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9000).
 - Supports [ironSource iOS adapter version 9.0.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-90000).
