@@ -2,6 +2,14 @@
 
 This is [fork](https://github.com/Innim/googleads-mobile-flutter) of `google_mobile_ads`.
 
+Differences from the original plugin:
+
+* On Android [GMA Next-Gen SDK](https://developers.google.com/admob/android/next-gen) is used by default.
+  To get back to the classic SDK, pass `--dart-define=USE_NEXT_GEN_SDK=false` to the build command
+  or set `googleMobileAds.useNextGenSdk=false` in `android/gradle.properties` of the app.
+* On Android a `LinkageError` thrown while handling a method call is returned to Dart as an error.
+* On iOS the plugin can be built as a framework (`use_frameworks!`).
+
 [![google_mobile_ads](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml/badge.svg)](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml)
 
 This repository contains the source code for the Google Mobile Ads Flutter

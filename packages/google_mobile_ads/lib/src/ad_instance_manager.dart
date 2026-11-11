@@ -58,6 +58,12 @@ class AdInstanceManager {
          StandardMethodCodec(AdMessageCodec()),
        ) {
     channel.setMethodCallHandler((MethodCall call) async {
+      if (call.method == 'onPreloadEvent') {
+        final String preloadId = call.arguments['preloadId'];
+        final String eventName = call.arguments['eventName'];
+        _handlePreloadEvent(preloadId, eventName, call.arguments);
+        return;
+      }
       assert(call.method == 'onAdEvent');
 
       final int adId = call.arguments['adId'];
@@ -74,6 +80,51 @@ class AdInstanceManager {
 
   int _nextAdId = 0;
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
+  final Map<String, PreloadCallback> _preloadCallbacks =
+      <String, PreloadCallback>{};
+
+  void registerPreloadCallback(String preloadId, PreloadCallback callback) {
+    _preloadCallbacks[preloadId] = callback;
+  }
+
+  void unregisterPreloadCallback(String preloadId) {
+    _preloadCallbacks.remove(preloadId);
+  }
+
+  void clearAllPreloadCallbacks() {
+    _preloadCallbacks.clear();
+  }
+
+  void _handlePreloadEvent(
+    String preloadId,
+    String eventName,
+    Map<dynamic, dynamic> arguments,
+  ) {
+    final PreloadCallback? callback = _preloadCallbacks[preloadId];
+    if (callback == null) {
+      return;
+    }
+    switch (eventName) {
+      case 'onAdPreloaded':
+        if (callback.onAdPreloaded != null) {
+          final ResponseInfo responseInfo =
+              arguments['responseInfo'] as ResponseInfo;
+          callback.onAdPreloaded!(preloadId, responseInfo);
+        }
+        break;
+      case 'onAdsExhausted':
+        if (callback.onAdsExhausted != null) {
+          callback.onAdsExhausted!(preloadId);
+        }
+        break;
+      case 'onAdFailedToPreload':
+        if (callback.onAdFailedToPreload != null) {
+          final AdError error = arguments['error'] as AdError;
+          callback.onAdFailedToPreload!(preloadId, error);
+        }
+        break;
+    }
+  }
 
   /// Invokes load and dispose calls.
   final MethodChannel channel;
@@ -683,6 +734,14 @@ class AdInstanceManager {
     );
   }
 
+  /// Allocates a new ad ID.
+  int nextAdId() => _nextAdId++;
+
+  /// Tracks an ad under an adId.
+  void trackAd(Ad ad, int adId) {
+    _loadedAds[adId] = ad;
+  }
+
   /// Free the plugin resources associated with this ad.
   ///
   /// Disposing a banner ad that's been shown removes it from the screen.
@@ -729,6 +788,8 @@ class AdInstanceManager {
             requestConfiguration.tagForChildDirectedTreatment,
         'testDeviceIds': requestConfiguration.testDeviceIds,
         'tagForUnderAgeOfConsent': requestConfiguration.tagForUnderAgeOfConsent,
+        'ageRestrictedTreatment':
+            requestConfiguration.ageRestrictedTreatment?.index,
       },
     );
   }
@@ -986,6 +1047,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.testDeviceIds);
+      writeValue(buffer, value.ageRestrictedTreatment?.index);
     } else if (value is NativeTemplateStyle) {
       buffer.putUint8(_valueNativeTemplateStyle);
       writeValue(buffer, value.templateType);
@@ -1104,8 +1166,8 @@ class AdMessageCodec extends StandardMessageCodec {
         );
       case _valueRewardItem:
         return RewardItem(
-          readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
+          readValueOfType(buffer.getUint8(), buffer) ?? 0,
+          _safeReadString(buffer),
         );
       case _valueResponseInfo:
         return ResponseInfo(
@@ -1190,7 +1252,7 @@ class AdMessageCodec extends StandardMessageCodec {
           buffer.getUint8(),
           buffer,
         );
-        final String description = readValueOfType(buffer.getUint8(), buffer);
+        final String description = _safeReadString(buffer);
 
         double latency = readValueOfType(buffer.getUint8(), buffer).toDouble();
         // Android provides this value as an int in milliseconds while iOS
@@ -1236,17 +1298,36 @@ class AdMessageCodec extends StandardMessageCodec {
           startMuted: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRequestConfigurationParams:
+        final String? maxAdContentRating = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final int? tagForChildDirectedTreatment = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final int? tagForUnderAgeOfConsent = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final List<String>? testDeviceIds = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        )?.cast<String>();
+        final int? ageRestrictedTreatmentIndex = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final AgeRestrictedTreatment? ageRestrictedTreatment =
+            ageRestrictedTreatmentIndex != null
+            ? AgeRestrictedTreatment.values[ageRestrictedTreatmentIndex]
+            : null;
         return RequestConfiguration(
-          maxAdContentRating: readValueOfType(buffer.getUint8(), buffer),
-          tagForChildDirectedTreatment: readValueOfType(
-            buffer.getUint8(),
-            buffer,
-          ),
-          tagForUnderAgeOfConsent: readValueOfType(buffer.getUint8(), buffer),
-          testDeviceIds: readValueOfType(
-            buffer.getUint8(),
-            buffer,
-          ).cast<String>(),
+          maxAdContentRating: maxAdContentRating,
+          tagForChildDirectedTreatment: tagForChildDirectedTreatment,
+          tagForUnderAgeOfConsent: tagForUnderAgeOfConsent,
+          testDeviceIds: testDeviceIds,
+          ageRestrictedTreatment: ageRestrictedTreatment,
         );
       case _valueNativeTemplateStyle:
         return NativeTemplateStyle(

@@ -220,6 +220,7 @@
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
 - (void)load;
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad;
 
 @end
 
@@ -227,6 +228,7 @@
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
                                      adId:(NSNumber *_Nonnull)adId;
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad;
 @end
 
 @interface FLTRewardedAd : FLTFullScreenAd
@@ -236,6 +238,7 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 - (void)setServerSideVerificationOptions:
     (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
+- (void)onAdLoaded:(GADRewardedAd *_Nonnull)ad;
 @end
 
 @interface FLTRewardedInterstitialAd : FLTFullScreenAd
@@ -252,6 +255,7 @@
                                   request:(FLTAdRequest *_Nonnull)request
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADAppOpenAd *_Nullable)appOpenAd;
+- (void)onAdLoaded:(GADAppOpenAd *_Nonnull)ad;
 @end
 
 @interface FLTVideoOptions : NSObject
