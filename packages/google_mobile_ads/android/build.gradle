@@ -35,7 +35,12 @@ android {
                 }
     }
 
-    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
+    // Innim: GMA Next-Gen SDK is used by default. To get back to the classic one, pass
+    // `--dart-define=USE_NEXT_GEN_SDK=false` or set `googleMobileAds.useNextGenSdk=false`
+    // in the app's gradle.properties.
+    def useNextGenSdk = (dartEnvironmentVariables.USE_NEXT_GEN_SDK
+            ?: project.findProperty('googleMobileAds.useNextGenSdk')
+            ?: true).toString().toBoolean()
 
     compileSdk 36
 

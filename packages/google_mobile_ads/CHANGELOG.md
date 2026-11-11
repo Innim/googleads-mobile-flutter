@@ -1,4 +1,6 @@
 ## 9.1.0
+* **Innim fork:** GMA Next-Gen SDK is used on Android by default, see the readme for how to switch back.
+* **Innim fork:** fixed the iOS build with `use_frameworks!` (backport from 9.2.0).
 * Adding Ad Preloading APIs. [PR 1445](https://github.com/googleads/googleads-mobile-flutter/pull/1445)
 * Support `AdManagerBannerAd` recycling by exposing `isMounted`. [PR 1443](https://github.com/googleads/googleads-mobile-flutter/pull/1443)
 * Added `setConsentSyncId()` on `ConsentRequestParameters`. [PR 1452](https://github.com/googleads/googleads-mobile-flutter/pull/1452)
