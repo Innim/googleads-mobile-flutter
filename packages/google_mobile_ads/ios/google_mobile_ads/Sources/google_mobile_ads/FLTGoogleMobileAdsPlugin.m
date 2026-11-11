@@ -18,6 +18,7 @@
 #import "FLTConstants.h"
 #import "FLTNSString.h"
 #import "FLTUserMessagingPlatformManager.h"
+#import "FLTAdPreloader.h"
 @import webview_flutter_wkwebview;
 
 @interface FLTGoogleMobileAdsPlugin ()
@@ -73,6 +74,7 @@
   FLTAppStateNotifier *_appStateNotifier;
   FLTUserMessagingPlatformManager *_userMessagingPlatformManager;
   __weak FlutterAppDelegate *_appDelegate;
+  FLTAdPreloader *_flutterAdPreloader;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -92,6 +94,8 @@
             binaryMessenger:[registrar messenger]
                       codec:codec];
   [registrar addMethodCallDelegate:instance channel:channel];
+
+  instance->_flutterAdPreloader = [[FLTAdPreloader alloc] initWithChannel:channel manager:instance->_manager];
 
   FLTNewGoogleMobileAdsViewFactory *viewFactory =
       [[FLTNewGoogleMobileAdsViewFactory alloc]
@@ -249,6 +253,22 @@
                   result:(FlutterResult)result {
   UIViewController *rootController = self.rootController;
 
+  if ([call.method isEqualToString:@"MobileAds#startPreloading"] ||
+      [call.method isEqualToString:@"MobileAds#destroyPreloader"] ||
+      [call.method isEqualToString:@"MobileAds#destroyAllPreloaders"] ||
+      [call.method isEqualToString:@"MobileAds#isPreloadedAdAvailable"] ||
+      [call.method isEqualToString:@"MobileAds#getNumAdsAvailable"] ||
+      [call.method isEqualToString:@"MobileAds#getPreloadConfiguration"] ||
+      [call.method isEqualToString:@"MobileAds#getPreloadConfigurations"] ||
+      [call.method isEqualToString:@"MobileAds#pollAd"]) {
+    if (self->_flutterAdPreloader) {
+      [self->_flutterAdPreloader handleMethodCall:call result:result];
+    } else {
+      result([FlutterError errorWithCode:@"PreloadError" message:@"Preloader not initialized" details:nil]);
+    }
+    return;
+  }
+
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
     FLTInitializationHandler *handler =
         [[FLTInitializationHandler alloc] initWithResult:result];
@@ -334,6 +354,7 @@
     NSNumber *tagForUnderAgeOfConsent =
         call.arguments[@"tagForUnderAgeOfConsent"];
     NSArray<NSString *> *testDeviceIds = call.arguments[@"testDeviceIds"];
+    NSNumber *ageRestrictedTreatment = call.arguments[@"ageRestrictedTreatment"];
 
     if (maxAdContentRating != NULL && maxAdContentRating != (id)[NSNull null]) {
       if ([maxAdContentRating isEqualToString:@"G"]) {
@@ -379,6 +400,11 @@
     if (testDeviceIds != NULL && testDeviceIds != (id)[NSNull null]) {
       GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
           testDeviceIds;
+    }
+    if (ageRestrictedTreatment != NULL &&
+        ageRestrictedTreatment != (id)[NSNull null]) {
+      GADMobileAds.sharedInstance.requestConfiguration.ageRestrictedTreatment =
+          [ageRestrictedTreatment intValue];
     }
     result(nil);
   } else if ([call.method isEqualToString:@"loadBannerAd"]) {
